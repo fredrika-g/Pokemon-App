@@ -4,11 +4,52 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pokemon Application</title>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <header></header>
+    <header class="nav-bar flex flex-column">
+      <div class="wrapper flex flex-row">
+        <img src="" alt="logo" class="site-logo" />
+        <span class="site-title">Pokemon Application</span>
+      </div>
+      <hr />
+    </header>
 
-    <main></main>
+    <main>
+      <section class="selectItemsSection flex">
+        <div class="dropdownWrapper flex flex-column">
+          <div class="flex flex-column dropdown">
+            <label for="pokemonSelect1">Choose a Pokemon</label>
+            <select
+              class="pokemonSelect"
+              name="pokemonSelect1"
+              id="pokemonSelect1"
+            >
+              <option value="" disabled selected>Click to choose...</option>
+            </select>
+          </div>
+          <div class="flex flex-column dropdown secondaryDropdown display-none">
+            <label for="pokemonSelect2">Choose Second Pokemon</label>
+            <select
+              class="pokemonSelect"
+              name="pokemonSelect2"
+              id="pokemonSelect2"
+            >
+              <option value="" disabled selected>Choose second...</option>
+            </select>
+          </div>
+        </div>
+        <div class="displayWrapper flex">
+          <button id="compareBtn" class="primary-btn display-none">
+            Compare Pokemon
+          </button>
+          <div class="displayedPokemon flex">
+            <img src="./images/placeholder-bg-lg.svg" alt="placeholder image" />
+          </div>
+        </div>
+      </section>
+    </main>
 
     <footer></footer>
   </body>

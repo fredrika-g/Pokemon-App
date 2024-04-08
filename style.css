@@ -1,0 +1,143 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.display-none {
+  display: none;
+}
+
+/* header styling */
+.nav-bar {
+  gap: 0.5rem;
+  padding: 0.5rem;
+  align-items: center;
+}
+
+.nav-bar .wrapper {
+  justify-content: center;
+  align-items: center;
+}
+.site-title {
+  display: none;
+  font-size: 2.5rem;
+}
+
+.site-logo {
+  aspect-ratio: 1;
+  width: 75px;
+}
+
+.nav-bar hr {
+  width: 90%;
+}
+
+@media (width >= 768px) {
+  .nav-bar {
+    gap: 1.5rem;
+    padding-inline: 2rem;
+  }
+
+  .nav-bar .wrapper {
+    align-self: start;
+  }
+
+  .site-title {
+    display: block;
+  }
+
+  .site-logo {
+    width: 100px;
+  }
+}
+
+/* main content styling */
+.selectItemsSection {
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  gap: 1rem;
+}
+.selectItemsSection label {
+  font-size: 1rem;
+  font-weight: 500;
+  width: 100%;
+}
+
+label[for="pokemonSelect2"] {
+  font-size: 0.8rem;
+}
+
+.dropdownWrapper {
+  gap: 1rem;
+  min-width: max-content;
+}
+
+.dropdownWrapper .dropdown {
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.pokemonSelect {
+  padding: 0.4rem 0.5rem;
+  font-size: 0.8rem;
+}
+
+.selectItemsSection .displayWrapper {
+  flex-direction: column;
+}
+
+.displayedPokemon {
+  flex-direction: column;
+}
+
+.pokemonCard {
+  border: 1px solid black;
+}
+.pokemonCard div {
+  align-items: center;
+}
+
+.cardImage {
+  aspect-ratio: 1;
+  width: 75px;
+  object-fit: cover;
+}
+
+@media (width >= 768px) {
+  .selectItemsSection {
+    flex-direction: row;
+  }
+
+  .dropdownWrapper {
+    padding-right: 1rem;
+    min-height: 25rem;
+    border-right: 1px solid black;
+  }
+
+  .selectItemsSection .displayWrapper {
+    flex-direction: column-reverse;
+  }
+
+  .displayedPokemon {
+    flex-direction: row;
+  }
+}

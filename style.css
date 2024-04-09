@@ -8,6 +8,10 @@ body {
   font-family: system-ui;
 }
 
+main {
+  padding: 1rem;
+}
+
 .flex {
   display: flex;
 }
@@ -79,6 +83,7 @@ body {
   font-size: 1rem;
   font-weight: 500;
   width: 100%;
+  text-align: center;
 }
 
 label[for="pokemonSelect2"] {
@@ -87,7 +92,7 @@ label[for="pokemonSelect2"] {
 
 .dropdownWrapper {
   gap: 1rem;
-  min-width: max-content;
+  min-width: 200px;
 }
 
 .dropdownWrapper .dropdown {
@@ -103,23 +108,64 @@ label[for="pokemonSelect2"] {
 
 .selectItemsSection .displayWrapper {
   flex-direction: column;
+  width: 100%;
 }
 
 .displayedPokemon {
   flex-direction: column;
+  align-items: center;
+}
+
+.displayedPokemon img {
+  max-width: 50%;
 }
 
 .pokemonCard {
   border: 1px solid black;
+  min-width: 265px;
 }
-.pokemonCard div {
+.pokemonCard > div {
   align-items: center;
+}
+
+.card-header {
+  justify-content: space-evenly;
 }
 
 .cardImage {
   aspect-ratio: 1;
   width: 75px;
   object-fit: cover;
+}
+
+.stats {
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.stats div:first-child {
+  align-self: start;
+}
+.stats div:first-child p {
+  gap: 0.5rem;
+}
+
+.stats div:first-child div {
+  gap: 1rem;
+}
+
+.statsDiv {
+  gap: 0.5rem;
+}
+
+.statsDiv > div {
+  gap: 1rem;
+}
+
+.left-stats p,
+.right-stats p {
+  gap: 0.5rem;
+  justify-content: space-between;
 }
 
 @media (width >= 768px) {
@@ -139,5 +185,6 @@ label[for="pokemonSelect2"] {
 
   .displayedPokemon {
     flex-direction: row;
+    justify-content: center;
   }
 }

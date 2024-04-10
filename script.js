@@ -4,6 +4,10 @@ let secondPokemonSelect = document.querySelector("#pokemonSelect2");
 let secondaryDropdown = document.querySelector(".secondaryDropdown");
 let compareBtn = document.querySelector("#compareBtn");
 
+let compareSection = document.querySelector("#compareSection");
+
+let breakpoint = 768;
+
 // storing chosen pokemon
 let chosenPokemonList = [];
 let allPokemon = [];
@@ -43,7 +47,11 @@ class Pokemon {
 
     let winner = p1Score > p2Score ? p1.name : p2.name;
 
-    return `${winner} wins in the most categories!`;
+    return `${
+      p1Score === p2Score
+        ? "It's a tie!"
+        : `${winner} wins in the most categories!`
+    }`;
   }
 }
 
@@ -165,7 +173,7 @@ const renderPokemonCards = () => {
 
     let header = document.createElement("div");
     header.classList.add("flex", "flex-row", "card-header");
-    header.innerHTML = `<span>${pokemon.name}</span><img class="cardImage" src="${pokemon.image}" alt="${pokemon.name} image">`;
+    header.innerHTML = `<h2>${pokemon.name}</h2><img class="cardImage" src="${pokemon.image}" alt="${pokemon.name} image">`;
 
     let types = pokemon.types.map((typeObj) => {
       return typeObj.type.name;
@@ -177,32 +185,97 @@ const renderPokemonCards = () => {
 
     let regularStats = document.createElement("div");
     regularStats.classList.add("flex", "flex-column");
-    regularStats.innerHTML = `<div class="flex"><p class="flex">Weight<span>${pokemon.weight}</span></p><p class="flex">Height<span>${pokemon.height}</span></p></div>
-    <p class="flex">Type(s)<span>${types}</span></p>`;
+    regularStats.innerHTML = `<div class="flex"><h3 class="flex"><span>Weight</span><span>${pokemon.weight}</span></h3><h3 class="flex"><span>Height</span><span>${pokemon.height}</span></h3></div>
+    <h3 class="flex"><span>Type(s)</span><span>${types}</span></h3>`;
 
     let specStatsDiv = document.createElement("div");
     specStatsDiv.classList.add("statsDiv", "flex", "flex-column");
     let specStats = document.createElement("div");
     specStats.classList.add("flex", "flex-row");
     specStats.innerHTML = `<div class="flex flex-column left-stats">
-    <p class="flex"><span>HP</span><span>${stats.hp}</span></p>
-    <p class="flex"><span>Attack</span><span>${stats.attack}</span></p>
-    <p class="flex"><span>Defense</span><span>${stats.defense}</span></p>
+    <h3 class="flex"><span>HP</span><span>${stats.hp}</span></h3>
+    <h3 class="flex"><span>Attack</span><span>${stats.attack}</span></h3>
+    <h3 class="flex"><span>Defense</span><span>${stats.defense}</span></h3>
     </div>
     <div class="flex flex-column right-stats">
-    <p class="flex"><span>Speed</span><span>${stats.speed}</span></p>
-    <p class="flex"><span>Special Attack</span><span>${stats["special-attack"]}</span></p>
-    <p class="flex"><span>Special Defense</span><span>${stats["special-defense"]}</span></p>
+    <h3 class="flex"><span>Speed</span><span>${stats.speed}</span></h3>
+    <h3 class="flex"><span>Special Attack</span><span>${stats["special-attack"]}</span></h3>
+    <h3 class="flex"><span>Special Defense</span><span>${stats["special-defense"]}</span></h3>
     
     </div>`;
 
-    specStatsDiv.innerHTML = "<p class='title'>Stats</p>";
+    specStatsDiv.innerHTML = "<h3 class='title'>Stats</h3>";
     specStatsDiv.append(specStats);
     body.append(regularStats, specStatsDiv);
     pokemonCard.append(header, body);
     displayDiv.append(pokemonCard);
   });
 };
+
+// creating comparison display
+const showComparison = () => {
+  let pokemon1 = comparingPokemonList[0];
+  let pokemon2 = comparingPokemonList[1];
+
+  let statNames = [
+    { name: "Weight", className: "weight" },
+    { name: "Height", className: "height" },
+    { name: "HP", className: "hp" },
+    { name: "Speed", className: "speed" },
+    { name: "Attack", className: "attack" },
+    { name: "Special Attack", className: "specAtt" },
+    { name: "Defense", className: "defense" },
+    { name: "Special Defense", className: "specDef" },
+  ];
+
+  compareSection.innerHTML = "";
+
+  statNames.forEach((item) => {
+    compareSection.innerHTML += `<h3 class="${item.className}">${item.name}</h3>`;
+  });
+
+  comparingPokemonList.forEach((pokemon, i) => {
+    let { weight, height, hp, speed, attack, defense } = pokemon.compared;
+    let specialAttack = pokemon.compared["special-attack"];
+    let specialDefense = pokemon.compared["special-defense"];
+    let statArray = [
+      weight,
+      height,
+      hp,
+      speed,
+      attack,
+      specialAttack,
+      defense,
+      specialDefense,
+    ];
+
+    compareSection.innerHTML += `<img class="compare-image${i}" src="${pokemon.image}" alt="${pokemon.name}"/>`;
+    compareSection.innerHTML += `<h2 class="compare-name${i}">${pokemon.name}</h2>`;
+    statArray.forEach((stat) => {
+      compareSection.innerHTML += `<h4 class="${
+        stat.isHighest ? "highest" : ""
+      } ${stat.stat_name}Val${i}">${stat.value}</h4>`;
+    });
+  });
+
+  compareSection.innerHTML += `<p class="compare-msg">${Pokemon.compareTwoPokemon(
+    pokemon1,
+    pokemon2
+  )}</p>`;
+};
+
+// toggling class on section based on window size
+window.addEventListener("resize", () => {
+  let w = window.innerWidth;
+
+  if (w <= breakpoint) {
+    compareSection.classList.add("mobile");
+    compareSection.classList.remove("desktop");
+  } else {
+    compareSection.classList.add("desktop");
+    compareSection.classList.remove("mobile");
+  }
+});
 
 // populating the dropdown
 window.addEventListener("load", async () => {
@@ -251,6 +324,12 @@ secondPokemonSelect.addEventListener("change", async () => {
     chosenPokemonList[0],
     chosenPokemonList[1]
   );
+
+  showComparison();
+});
+
+compareBtn.addEventListener("click", () => {
+  compareSection.scrollIntoView({ behavior: "smooth" });
 });
 
 // Inlämningsuppgift - Pokemon Application G/VG

@@ -73,6 +73,11 @@ main {
 }
 
 /* main content styling */
+
+.section-break {
+  width: 90%;
+  margin: 1rem auto;
+}
 .selectItemsSection {
   flex-direction: column;
   justify-content: space-around;
@@ -108,12 +113,15 @@ label[for="pokemonSelect2"] {
 
 .selectItemsSection .displayWrapper {
   flex-direction: column;
+  align-items: center;
+  gap: 2rem;
   width: 100%;
 }
 
 .displayedPokemon {
   flex-direction: column;
   align-items: center;
+  gap: 1.5rem;
 }
 
 .displayedPokemon img {
@@ -122,14 +130,22 @@ label[for="pokemonSelect2"] {
 
 .pokemonCard {
   border: 1px solid black;
-  min-width: 265px;
+  min-width: 270px;
+  padding: 1rem;
 }
 .pokemonCard > div {
   align-items: center;
 }
 
+.pokemonCard h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
 .card-header {
-  justify-content: space-evenly;
+  justify-content: space-between;
+  width: 100%;
+  padding-inline: 0.5rem;
 }
 
 .cardImage {
@@ -143,10 +159,24 @@ label[for="pokemonSelect2"] {
   margin-top: 1rem;
 }
 
+.stats *:not(.title) {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.stats .title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.stats span:nth-child(2) {
+  font-weight: 400;
+}
+
 .stats div:first-child {
   align-self: start;
 }
-.stats div:first-child p {
+.stats div:first-child h3 {
   gap: 0.5rem;
 }
 
@@ -162,8 +192,8 @@ label[for="pokemonSelect2"] {
   gap: 1rem;
 }
 
-.left-stats p,
-.right-stats p {
+.left-stats h3,
+.right-stats h3 {
   gap: 0.5rem;
   justify-content: space-between;
 }
@@ -186,5 +216,172 @@ label[for="pokemonSelect2"] {
   .displayedPokemon {
     flex-direction: row;
     justify-content: center;
+  }
+}
+
+.compareSection {
+  max-width: 500px;
+  margin: 0 auto;
+  display: grid;
+  justify-items: center;
+  gap: 1rem 0;
+  grid-template-areas:
+    "image1 image2"
+    "name1 name2"
+    "msg msg"
+    "weight weight "
+    "weightVal1  weightVal2"
+    "height height"
+    "heightVal1  heightVal2"
+    "hp hp"
+    "hpVal1 hpVal2"
+    "speed speed"
+    "speedVal1 speedVal2"
+    "attack attack"
+    "attackVal1 attackVal2"
+    "special-attack special-attack"
+    "specAttVal1 specAttVal2"
+    "defense defense"
+    "defenseVal1 defenseVal2"
+    "special-defense special-defense"
+    "specDefVal1 specDefVal2";
+}
+
+.highest {
+  text-decoration: underline;
+  text-underline-offset: 20%;
+  color: green;
+}
+
+.compareSection img {
+  aspect-ratio: 1;
+  width: 100px;
+  object-fit: cover;
+}
+
+.compareSection h4 {
+  font-weight: 400;
+}
+
+.compare-msg {
+  grid-area: msg;
+  font-size: 1.2rem;
+  font-style: italic;
+  margin: 1rem;
+}
+
+/* images */
+.compare-image0 {
+  grid-area: image1;
+}
+.compare-image1 {
+  grid-area: image2;
+}
+
+/* names */
+.compare-name0 {
+  grid-area: name1;
+}
+.compare-name1 {
+  grid-area: name2;
+}
+
+/* weight */
+.weight {
+  grid-area: weight;
+}
+.weightVal0 {
+  grid-area: weightVal1;
+}
+.weightVal1 {
+  grid-area: weightVal2;
+}
+
+/* height */
+.height {
+  grid-area: height;
+}
+
+.heightVal0 {
+  grid-area: heightVal1;
+}
+.heightVal1 {
+  grid-area: heightVal2;
+}
+/* hp */
+.hp {
+  grid-area: hp;
+}
+.hpVal0 {
+  grid-area: hpVal1;
+}
+.hpVal1 {
+  grid-area: hpVal2;
+}
+/* speed */
+.speed {
+  grid-area: speed;
+}
+.speedVal0 {
+  grid-area: speedVal1;
+}
+.speedVal1 {
+  grid-area: speedVal2;
+}
+/* attack */
+.attack {
+  grid-area: attack;
+}
+.attackVal0 {
+  grid-area: attackVal1;
+}
+.attackVal1 {
+  grid-area: attackVal2;
+}
+/* special attack */
+.specAtt {
+  grid-area: special-attack;
+}
+.special-attackVal0 {
+  grid-area: specAttVal1;
+}
+.special-attackVal1 {
+  grid-area: specAttVal2;
+}
+/* defense */
+.defense {
+  grid-area: defense;
+}
+.defenseVal0 {
+  grid-area: defenseVal1;
+}
+.defenseVal1 {
+  grid-area: defenseVal2;
+}
+/* special defense */
+.specDef {
+  grid-area: special-defense;
+}
+.special-defenseVal0 {
+  grid-area: specDefVal1;
+}
+.special-defenseVal1 {
+  grid-area: specDefVal2;
+}
+
+@media (width >= 768px) {
+  .compareSection {
+    grid-template-areas:
+      ". image1 image2"
+      ". name1 name2"
+      "weight weightVal1 weightVal2"
+      "height heightVal1 heightVal2"
+      "hp hpVal1 hpVal2"
+      "speed speedVal1 speedVal2"
+      "attack attackVal1 attackVal2"
+      "special-attack specAttVal1 specAttVal2"
+      "defense defenseVal1 defenseVal2"
+      "special-defense specDefVal1 specDefVal2"
+      "msg msg msg";
   }
 }

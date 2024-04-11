@@ -28,6 +28,10 @@ main {
   display: none;
 }
 
+.primary-btn {
+  padding: 0.3em 0.6em;
+}
+
 /* header styling */
 .nav-bar {
   gap: 0.5rem;
@@ -78,6 +82,10 @@ main {
   width: 90%;
   margin: 1rem auto;
 }
+
+.battle-break {
+  display: none;
+}
 .selectItemsSection {
   flex-direction: column;
   justify-content: space-around;
@@ -116,6 +124,14 @@ label[for="pokemonSelect2"] {
   align-items: center;
   gap: 2rem;
   width: 100%;
+}
+
+.displayWrapper .btn-group {
+  gap: 2rem;
+}
+
+.displayWrapper .btn-group button {
+  font-size: 1.1rem;
 }
 
 .displayedPokemon {
@@ -384,4 +400,97 @@ label[for="pokemonSelect2"] {
       "special-defense specDefVal1 specDefVal2"
       "msg msg msg";
   }
+}
+
+/* battle styling */
+#battleStatus {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+.battleSection {
+  align-items: center;
+  gap: 1.5rem;
+}
+.playersAndStats {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  gap: 1rem 0;
+  grid-template-areas:
+    "pokemon1 vs pokemon2"
+    "hp1 battleHP hp2"
+    "currentTurnImg . nextTurnImg";
+}
+
+.player0 {
+  grid-area: pokemon1;
+  font-size: 1.25rem;
+}
+.player1 {
+  grid-area: pokemon2;
+  font-size: 1.25rem;
+}
+.versus {
+  grid-area: vs;
+  margin-inline: 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.player0HP {
+  grid-area: hp1;
+  font-size: 1.25rem;
+}
+.player1HP {
+  grid-area: hp2;
+  font-size: 1.25rem;
+}
+.battleHP {
+  grid-area: battleHP;
+}
+
+.currentPlayer {
+  grid-area: currentTurnImg;
+  width: 150px;
+}
+.nonCurrentPlayer {
+  grid-area: nextTurnImg;
+  width: 100px;
+}
+
+.currentMove {
+  gap: 1rem;
+  align-items: center;
+}
+
+.currentMove h4 {
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+.currentMove span {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.battleMessages {
+  gap: 1rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.attackSection {
+  gap: 1rem;
+  align-items: center;
+}
+
+.attackSection h5 {
+  font-size: 1.25rem;
+  font-weight: 400;
+}
+
+#attackBtn {
+  font-size: 1.25rem;
+  font-weight: 500;
 }

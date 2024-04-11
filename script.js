@@ -3,8 +3,10 @@ let mainPokemonSelect = document.querySelector("#pokemonSelect1");
 let secondPokemonSelect = document.querySelector("#pokemonSelect2");
 let secondaryDropdown = document.querySelector(".secondaryDropdown");
 let compareBtn = document.querySelector("#compareBtn");
+let toBattleBtn = document.querySelector("#toBattleBtn");
 
 let compareSection = document.querySelector("#compareSection");
+let battleSection = document.querySelector("#battleSection");
 
 let breakpoint = 768;
 
@@ -12,10 +14,21 @@ let breakpoint = 768;
 let chosenPokemonList = [];
 let allPokemon = [];
 let comparingPokemonList = [];
+let battlingPokemon = [];
 
 // pokemon class
 class Pokemon {
-  constructor(id, name, imageUrl, types, weight, height, stats) {
+  constructor(
+    id,
+    name,
+    imageUrl,
+    types,
+    weight,
+    height,
+    stats,
+    moves,
+    showdown
+  ) {
     this.id = id;
     this.name = name;
     this.image = imageUrl;
@@ -23,6 +36,8 @@ class Pokemon {
     this.weight = weight;
     this.height = height;
     this.stats = stats;
+    this.moves = moves;
+    this.showdown = showdown;
     this.compared = {};
   }
   static compareTwoPokemon(pokemon1, pokemon2) {
@@ -141,6 +156,10 @@ const getPokemon = async (pokemonId) => {
 
     let image = pokemon.sprites.other["official-artwork"].front_default;
 
+    let { front_default, back_default } = pokemon.sprites.other.showdown;
+
+    let showdown = { front: front_default, back: back_default };
+
     let newPokemon = new Pokemon(
       +pokemon.id,
       name,
@@ -148,7 +167,9 @@ const getPokemon = async (pokemonId) => {
       pokemon.types,
       pokemon.weight,
       pokemon.height,
-      pokemon.stats
+      pokemon.stats,
+      pokemon.moves,
+      showdown
     );
     return newPokemon;
   } catch (err) {
@@ -264,6 +285,115 @@ const showComparison = () => {
   )}</p>`;
 };
 
+// starting battle
+const startBattle = () => {
+  document.querySelector("#battleStatus").innerText = "Battle has started!";
+
+  battlingPokemon = [...chosenPokemonList];
+
+  let startingPlayer = battlingPokemon.find(
+    (pokemon) => pokemon.compared.speed.isHighest
+  );
+  let nonStartingPlayer = battlingPokemon.find(
+    (pokemon) => !pokemon.compared.speed.isHighest
+  );
+
+  console.log(startingPlayer);
+
+  let attackPoints =
+    startingPlayer.compared.attack.value +
+    startingPlayer.compared["special-attack"].value;
+
+  let defensePoints =
+    nonStartingPlayer.compared.defense.value +
+    nonStartingPlayer.compared["special-defense"].value;
+
+  let damage = attackPoints - defensePoints * 0.8;
+  console.log("Damage: ", damage);
+  console.log("HP: ", nonStartingPlayer.compared.hp.value);
+
+  nonStartingPlayer.battleHP = nonStartingPlayer.compared.hp.value - damage;
+  console.log("New HP: ", nonStartingPlayer.battleHP);
+
+  renderBattleBoard(true);
+};
+
+const renderBattleBoard = (isStartOfGame, nextPlayerIndex = "") => {
+  battleSection.innerHTML = "";
+  let playersAndStatsSection = document.createElement("div");
+  playersAndStatsSection.classList.add("playersAndStats");
+  battleSection.append(playersAndStatsSection);
+  playersAndStatsSection.innerHTML = '<h3 class="versus">vs</h3>';
+  playersAndStatsSection.innerHTML += '<span class="battleHP">HP</span>';
+
+  let attackSelect = document.createElement("select");
+  attackSelect.id = "attackSelect";
+  attackSelect.classList.add("pokemonSelect");
+
+  let currentPlayer;
+  let nextPlayer;
+  chosenPokemonList.forEach((pokemon, i) => {
+    let turn;
+    let isCurrentPlayer;
+    if (isStartOfGame) {
+      turn = pokemon.compared.speed.isHighest
+        ? "currentPlayer"
+        : "nonCurrentPlayer";
+
+      isCurrentPlayer = pokemon.compared.speed.isHighest;
+    } else if (nextPlayerIndex === i) {
+      turn = "currentPlayer";
+      isCurrentPlayer = true;
+    } else if (nextPlayerIndex !== i) {
+      turn = "nonCurrentPlayer";
+      isCurrentPlayer = false;
+    }
+
+    if (isCurrentPlayer) {
+      currentPlayer = pokemon;
+
+      pokemon.moves.forEach((move) => {
+        attackSelect.innerHTML += `<option value="${move.move.url}">${move.move.name}</option>`;
+      });
+    } else {
+      nextPlayer = pokemon;
+    }
+
+    playersAndStatsSection.innerHTML += `<h3 class="player${i}">${pokemon.name}</h3>`;
+    playersAndStatsSection.innerHTML += `<span class="player${i}HP">${pokemon.compared.hp.value}</span>`;
+
+    playersAndStatsSection.innerHTML += `<img class="${turn}" src="${
+      isCurrentPlayer ? pokemon.showdown.back : pokemon.showdown.front
+    }" alt="${pokemon.name}"/>`;
+  });
+
+  battleSection.innerHTML += `<div class="flex flex-column currentMove">
+  <h4>Current move:</h4>
+  <span id="playerName">${currentPlayer.name}</span>
+  </div>`;
+  battleSection.innerHTML +=
+    '<div class="flex flex-column battleMessages"></div>';
+
+  let attackSelectSection = document.createElement("div");
+  attackSelectSection.classList.add("flex", "flex-column", "attackSection");
+  battleSection.append(attackSelectSection);
+
+  attackSelectSection.innerHTML = "<h5>Pick an attack</h5>";
+  let attackBtn = document.createElement("button");
+  attackBtn.id = "attackBtn";
+  attackBtn.classList.add("primary-btn");
+  attackBtn.innerText = "Attack!";
+  attackBtn.addEventListener("click", () => {
+    attack(currentPlayer, nextPlayer);
+  });
+  attackSelectSection.append(attackSelect, attackBtn);
+};
+
+const attack = (current, next) => {
+  console.log("Current player: ", current.name);
+  console.log("Next player: ", next.name);
+};
+
 // toggling class on section based on window size
 window.addEventListener("resize", () => {
   let w = window.innerWidth;
@@ -319,17 +449,22 @@ secondPokemonSelect.addEventListener("change", async () => {
   chosenPokemonList[1] = chosenPokemon;
 
   compareBtn.classList.remove("display-none");
+  toBattleBtn.classList.remove("display-none");
+  document.querySelector(".battle-break").classList.remove("display-none");
   renderPokemonCards();
-  let comparisonMsg = Pokemon.compareTwoPokemon(
-    chosenPokemonList[0],
-    chosenPokemonList[1]
-  );
+  Pokemon.compareTwoPokemon(chosenPokemonList[0], chosenPokemonList[1]);
 
   showComparison();
 });
 
 compareBtn.addEventListener("click", () => {
   compareSection.scrollIntoView({ behavior: "smooth" });
+});
+
+toBattleBtn.addEventListener("click", () => {
+  battleSection.scrollIntoView({ behavior: "smooth" });
+
+  startBattle();
 });
 
 // Inlämningsuppgift - Pokemon Application G/VG

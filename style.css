@@ -1,7 +1,21 @@
+:root {
+  --text-primary: #000;
+  --text-secondary: hsl(0, 0%, 30%);
+  --warning: hsl(0, 100%, 50%);
+  --success: hsl(120, 100%, 25%);
+
+  /* font weights */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semi-bold: 600;
+  --fw-bold: 700;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -83,9 +97,6 @@ main {
   margin: 1rem auto;
 }
 
-.battle-break {
-  display: none;
-}
 .selectItemsSection {
   flex-direction: column;
   justify-content: space-around;
@@ -94,7 +105,7 @@ main {
 }
 .selectItemsSection label {
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
   width: 100%;
   text-align: center;
 }
@@ -155,7 +166,7 @@ label[for="pokemonSelect2"] {
 
 .pokemonCard h2 {
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: var(--fw-semi-bold);
 }
 
 .card-header {
@@ -177,16 +188,16 @@ label[for="pokemonSelect2"] {
 
 .stats *:not(.title) {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: var(--fw-semi-bold);
 }
 
 .stats .title {
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: var(--fw-semi-bold);
 }
 
 .stats span:nth-child(2) {
-  font-weight: 400;
+  font-weight: var(--fw-regular);
 }
 
 .stats div:first-child {
@@ -266,7 +277,7 @@ label[for="pokemonSelect2"] {
 .highest {
   text-decoration: underline;
   text-underline-offset: 20%;
-  color: green;
+  color: var(--success);
 }
 
 .compareSection img {
@@ -276,7 +287,7 @@ label[for="pokemonSelect2"] {
 }
 
 .compareSection h4 {
-  font-weight: 400;
+  font-weight: var(--fw-regular);
 }
 
 .compare-msg {
@@ -406,11 +417,13 @@ label[for="pokemonSelect2"] {
 #battleStatus {
   text-align: center;
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: var(--fw-semi-bold);
+  margin-block: 1rem;
 }
 .battleSection {
   align-items: center;
   gap: 1.5rem;
+  padding: 1rem;
 }
 .playersAndStats {
   display: grid;
@@ -420,7 +433,11 @@ label[for="pokemonSelect2"] {
   grid-template-areas:
     "pokemon1 vs pokemon2"
     "hp1 battleHP hp2"
-    "currentTurnImg . nextTurnImg";
+    "leftImg . rightImg";
+}
+
+.playersAndStats img {
+  margin-top: 2rem;
 }
 
 .player0 {
@@ -435,7 +452,7 @@ label[for="pokemonSelect2"] {
   grid-area: vs;
   margin-inline: 1rem;
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: var(--fw-regular);
 }
 
 .player0HP {
@@ -451,11 +468,11 @@ label[for="pokemonSelect2"] {
 }
 
 .currentPlayer {
-  grid-area: currentTurnImg;
+  grid-area: leftImg;
   width: 150px;
 }
 .nonCurrentPlayer {
-  grid-area: nextTurnImg;
+  grid-area: rightImg;
   width: 100px;
 }
 
@@ -466,18 +483,18 @@ label[for="pokemonSelect2"] {
 
 .currentMove h4 {
   font-size: 1.25rem;
-  font-weight: 400;
+  font-weight: var(--fw-regular);
 }
 
 .currentMove span {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: var(--fw-bold);
 }
 
 .battleMessages {
   gap: 1rem;
   font-size: 1.25rem;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
 }
 
 .attackSection {
@@ -487,10 +504,44 @@ label[for="pokemonSelect2"] {
 
 .attackSection h5 {
   font-size: 1.25rem;
-  font-weight: 400;
+  font-weight: var(--fw-regular);
 }
 
 #attackBtn {
   font-size: 1.25rem;
-  font-weight: 500;
+  font-weight: var(--fw-medium);
+}
+
+.hpWarning {
+  color: var(--warning);
+}
+
+.winner-profile {
+  align-items: center;
+}
+
+.winner-profile img {
+  max-width: 290px;
+}
+
+.winner-profile h3 {
+  font-size: 2.25rem;
+  font-weight: var(--fw-medium);
+}
+
+.winner-title {
+  font-size: 3rem;
+  font-weight: var(--fw-semi-bold);
+}
+
+.battleSection a {
+  text-underline-offset: 20%;
+  color: var(--text-primary);
+}
+
+.resetBattleDiv {
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: var(--fw-medium);
 }

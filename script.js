@@ -298,22 +298,10 @@ const startBattle = () => {
     (pokemon) => !pokemon.compared.speed.isHighest
   );
 
-  console.log(startingPlayer);
-
-  let attackPoints =
-    startingPlayer.compared.attack.value +
-    startingPlayer.compared["special-attack"].value;
-
-  let defensePoints =
-    nonStartingPlayer.compared.defense.value +
-    nonStartingPlayer.compared["special-defense"].value;
-
-  let damage = attackPoints - defensePoints * 0.8;
-  console.log("Damage: ", damage);
-  console.log("HP: ", nonStartingPlayer.compared.hp.value);
-
-  nonStartingPlayer.battleHP = nonStartingPlayer.compared.hp.value - damage;
-  console.log("New HP: ", nonStartingPlayer.battleHP);
+  if (startingPlayer.battleHP || nonStartingPlayer.battleHP) {
+    startingPlayer.battleHP = startingPlayer.compared.hp.value;
+    nonStartingPlayer.battleHP = nonStartingPlayer.compared.hp.value;
+  }
 
   renderBattleBoard(true);
 };
@@ -332,21 +320,25 @@ const renderBattleBoard = (isStartOfGame, nextPlayerIndex = "") => {
 
   let currentPlayer;
   let nextPlayer;
-  chosenPokemonList.forEach((pokemon, i) => {
+  battlingPokemon.forEach((pokemon, i) => {
     let turn;
     let isCurrentPlayer;
+    let hp;
     if (isStartOfGame) {
       turn = pokemon.compared.speed.isHighest
         ? "currentPlayer"
         : "nonCurrentPlayer";
 
       isCurrentPlayer = pokemon.compared.speed.isHighest;
+      hp = pokemon.compared.hp.value;
     } else if (nextPlayerIndex === i) {
       turn = "currentPlayer";
       isCurrentPlayer = true;
+      hp = pokemon.battleHP;
     } else if (nextPlayerIndex !== i) {
       turn = "nonCurrentPlayer";
       isCurrentPlayer = false;
+      hp = pokemon.battleHP;
     }
 
     if (isCurrentPlayer) {
@@ -360,7 +352,9 @@ const renderBattleBoard = (isStartOfGame, nextPlayerIndex = "") => {
     }
 
     playersAndStatsSection.innerHTML += `<h3 class="player${i}">${pokemon.name}</h3>`;
-    playersAndStatsSection.innerHTML += `<span class="player${i}HP">${pokemon.compared.hp.value}</span>`;
+    playersAndStatsSection.innerHTML += `<span class="player${i}HP ${
+      pokemon.name
+    }HP ${hp < 25 ? "hpWarning" : ""}" data-index=${i}>${hp}</span>`;
 
     playersAndStatsSection.innerHTML += `<img class="${turn}" src="${
       isCurrentPlayer ? pokemon.showdown.back : pokemon.showdown.front
@@ -390,8 +384,62 @@ const renderBattleBoard = (isStartOfGame, nextPlayerIndex = "") => {
 };
 
 const attack = (current, next) => {
-  console.log("Current player: ", current.name);
-  console.log("Next player: ", next.name);
+  let nextPlayerHPSpan = document.querySelector(`.${next.name}HP`);
+
+  let attackPoints =
+    current.compared.attack.value + current.compared["special-attack"].value;
+  let defensePoints =
+    next.compared.defense.value + next.compared["special-defense"].value;
+
+  let damage = attackPoints - defensePoints * 0.8;
+  damage = Math.floor(damage);
+  if (damage < 10) {
+    damage = 10;
+  }
+
+  next.battleHP
+    ? (next.battleHP -= damage)
+    : (next.battleHP = next.compared.hp.value - damage);
+
+  nextPlayerHPSpan.innerText = next.battleHP;
+
+  if (next.battleHP < 25) nextPlayerHPSpan.classList.add("hpWarning");
+
+  let battleMessages = document.querySelector(".battleMessages");
+  battleMessages.innerHTML = `<p>${current.name} used {attack name} and did ${damage} damage!</p>`;
+
+  let attackBtn = document.querySelector("#attackBtn");
+  let nextPlayerIndex = +nextPlayerHPSpan.dataset.index;
+
+  if (next.battleHP > 0) {
+    attackBtn.disabled = true;
+
+    battleMessages.innerHTML += `<p>${next.name} remaining HP: ${next.battleHP}</p>`;
+    setTimeout(() => {
+      renderBattleBoard(false, nextPlayerIndex);
+    }, 3000);
+  } else {
+    attackBtn.disabled = true;
+    battleMessages.innerHTML += `${current.name} has won the battle!`;
+    setTimeout(() => {
+      gameOver(current, next);
+    }, 3000);
+  }
+};
+
+const gameOver = (winner, loser) => {
+  console.log(`${winner.name} won over ${loser.name}!`);
+  document.querySelector("#battleStatus").innerText = "";
+
+  battleSection.innerHTML = "<h2 class='winner-title'>Winner</h2>";
+  battleSection.innerHTML += `<div class="winner-profile flex flex-column">
+  <img src="${winner.image}" alt="${winner.name}"/>
+  <h3>${winner.name}</h3>
+  </div>`;
+  battleSection.innerHTML += `<div class="flex flex-column resetBattleDiv">
+  <p>${winner.name} defeated ${loser.name}!</p>
+  <a href="#topSection">Choose other pokemon!</a>
+  </div>`;
 };
 
 // toggling class on section based on window size
@@ -439,6 +487,9 @@ mainPokemonSelect.addEventListener("change", async () => {
     }
   });
 
+  compareBtn.classList.add("display-none");
+  toBattleBtn.classList.add("display-none");
+
   secondaryDropdown.classList.remove("display-none");
 });
 
@@ -462,9 +513,8 @@ compareBtn.addEventListener("click", () => {
 });
 
 toBattleBtn.addEventListener("click", () => {
-  battleSection.scrollIntoView({ behavior: "smooth" });
-
   startBattle();
+  battleSection.scrollIntoView({ behavior: "smooth" });
 });
 
 // Inlämningsuppgift - Pokemon Application G/VG

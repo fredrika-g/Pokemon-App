@@ -26,7 +26,7 @@ class Pokemon {
     weight,
     height,
     stats,
-    moves,
+    move,
     showdown
   ) {
     this.id = id;
@@ -36,7 +36,7 @@ class Pokemon {
     this.weight = weight;
     this.height = height;
     this.stats = stats;
-    this.moves = moves;
+    this.move = move;
     this.showdown = showdown;
     this.compared = {};
   }
@@ -160,6 +160,9 @@ const getPokemon = async (pokemonId) => {
 
     let showdown = { front: front_default, back: back_default };
 
+    let move = pokemon.moves[0].move.name;
+    move = move.charAt(0).toUpperCase() + move.slice(1);
+
     let newPokemon = new Pokemon(
       +pokemon.id,
       name,
@@ -168,7 +171,7 @@ const getPokemon = async (pokemonId) => {
       pokemon.weight,
       pokemon.height,
       pokemon.stats,
-      pokemon.moves,
+      move,
       showdown
     );
     return newPokemon;
@@ -314,16 +317,13 @@ const renderBattleBoard = (isStartOfGame, nextPlayerIndex = "") => {
   playersAndStatsSection.innerHTML = '<h3 class="versus">vs</h3>';
   playersAndStatsSection.innerHTML += '<span class="battleHP">HP</span>';
 
-  let attackSelect = document.createElement("select");
-  attackSelect.id = "attackSelect";
-  attackSelect.classList.add("pokemonSelect");
-
   let currentPlayer;
   let nextPlayer;
   battlingPokemon.forEach((pokemon, i) => {
     let turn;
     let isCurrentPlayer;
     let hp;
+
     if (isStartOfGame) {
       turn = pokemon.compared.speed.isHighest
         ? "currentPlayer"
@@ -334,19 +334,25 @@ const renderBattleBoard = (isStartOfGame, nextPlayerIndex = "") => {
     } else if (nextPlayerIndex === i) {
       turn = "currentPlayer";
       isCurrentPlayer = true;
-      hp = pokemon.battleHP;
+
+      if (pokemon.battleHP) {
+        hp = pokemon.battleHP;
+      } else {
+        hp = pokemon.compared.hp.value;
+      }
     } else if (nextPlayerIndex !== i) {
       turn = "nonCurrentPlayer";
       isCurrentPlayer = false;
-      hp = pokemon.battleHP;
+
+      if (pokemon.battleHP) {
+        hp = pokemon.battleHP;
+      } else {
+        hp = pokemon.compared.hp.value;
+      }
     }
 
     if (isCurrentPlayer) {
       currentPlayer = pokemon;
-
-      pokemon.moves.forEach((move) => {
-        attackSelect.innerHTML += `<option value="${move.move.url}">${move.move.name}</option>`;
-      });
     } else {
       nextPlayer = pokemon;
     }
@@ -368,11 +374,6 @@ const renderBattleBoard = (isStartOfGame, nextPlayerIndex = "") => {
   battleSection.innerHTML +=
     '<div class="flex flex-column battleMessages"></div>';
 
-  let attackSelectSection = document.createElement("div");
-  attackSelectSection.classList.add("flex", "flex-column", "attackSection");
-  battleSection.append(attackSelectSection);
-
-  attackSelectSection.innerHTML = "<h5>Pick an attack</h5>";
   let attackBtn = document.createElement("button");
   attackBtn.id = "attackBtn";
   attackBtn.classList.add("primary-btn");
@@ -380,7 +381,7 @@ const renderBattleBoard = (isStartOfGame, nextPlayerIndex = "") => {
   attackBtn.addEventListener("click", () => {
     attack(currentPlayer, nextPlayer);
   });
-  attackSelectSection.append(attackSelect, attackBtn);
+  battleSection.append(attackBtn);
 };
 
 const attack = (current, next) => {
@@ -406,7 +407,7 @@ const attack = (current, next) => {
   if (next.battleHP < 25) nextPlayerHPSpan.classList.add("hpWarning");
 
   let battleMessages = document.querySelector(".battleMessages");
-  battleMessages.innerHTML = `<p>${current.name} used {attack name} and did ${damage} damage!</p>`;
+  battleMessages.innerHTML = `<p>${current.name} used ${current.move} and did ${damage} damage!</p>`;
 
   let attackBtn = document.querySelector("#attackBtn");
   let nextPlayerIndex = +nextPlayerHPSpan.dataset.index;
@@ -428,7 +429,6 @@ const attack = (current, next) => {
 };
 
 const gameOver = (winner, loser) => {
-  console.log(`${winner.name} won over ${loser.name}!`);
   document.querySelector("#battleStatus").innerText = "";
 
   battleSection.innerHTML = "<h2 class='winner-title'>Winner</h2>";
@@ -459,14 +459,23 @@ window.addEventListener("resize", () => {
 window.addEventListener("load", async () => {
   let data = await getData("https://pokeapi.co/api/v2/pokemon?limit=151");
   let pokemons = data.results;
-  allPokemon = pokemons;
 
   pokemons.forEach((pokemon, index) => {
     let name = pokemon.name;
     name = name.charAt(0).toUpperCase() + name.slice(1);
-    mainPokemonSelect.innerHTML += `<option value="${
-      index + 1
-    }">${name}</option>`;
+
+    let pokemonObj = { name, id: index + 1 };
+
+    allPokemon.push(pokemonObj);
+  });
+
+  // sorting pokemon alphabetically
+  allPokemon.sort((a, b) => {
+    return a.name.localeCompare(b.name);
+  });
+
+  allPokemon.forEach((pokemon) => {
+    mainPokemonSelect.innerHTML += `<option value="${pokemon.id}">${pokemon.name}</option>`;
   });
 });
 
@@ -477,13 +486,9 @@ mainPokemonSelect.addEventListener("change", async () => {
   chosenPokemonList[0] = thisPokemon;
 
   //   populating second dropdown
-  allPokemon.forEach((pokemon, index) => {
+  allPokemon.forEach((pokemon) => {
     if (pokemon.name.toLowerCase() !== thisPokemon.name.toLowerCase()) {
-      let name = pokemon.name;
-      name = name.charAt(0).toUpperCase() + name.slice(1);
-      secondPokemonSelect.innerHTML += `<option value="${
-        index + 1
-      }">${name}</option>`;
+      secondPokemonSelect.innerHTML += `<option value="${pokemon.id}">${pokemon.name}</option>`;
     }
   });
 
@@ -501,7 +506,6 @@ secondPokemonSelect.addEventListener("change", async () => {
 
   compareBtn.classList.remove("display-none");
   toBattleBtn.classList.remove("display-none");
-  document.querySelector(".battle-break").classList.remove("display-none");
   renderPokemonCards();
   Pokemon.compareTwoPokemon(chosenPokemonList[0], chosenPokemonList[1]);
 

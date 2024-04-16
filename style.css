@@ -2,10 +2,13 @@
 
 :root {
   /* font colors */
-  --text-primary: #000;
-  --text-secondary: hsl(0, 0%, 30%);
-  --warning: hsl(0, 100%, 50%);
-  --success: hsl(120, 100%, 25%);
+  --text-brand: #1d3378;
+  --text-primary: #010203;
+  --text-secondary: #1d222e;
+  --text-tertiary: #303749;
+  --warning: #ea4646;
+  --warning-bg: #e44c3a;
+  --success: #48a56e;
 
   /* font weights */
   --fw-regular: 400;
@@ -14,11 +17,17 @@
   --fw-bold: 700;
 
   /* other colors */
-  --clr-primary-100: hsl(0, 0%, 80%);
-  --clr-primary-200: hsl(0, 0%, 60%);
-  --clr-primary-300: hsl(0, 0%, 35%);
-  --clr-primary-400: hsl(0, 0%, 25%);
-  --clr-primary-500: hsl(0, 0%, 0%);
+  --accent-100: #ffdd86;
+  --pokemon-blue: #2c4798;
+  --pokemon-yellow: #fec40a;
+
+  --pure-black: #000;
+  --pure-white: #fff;
+
+  --divider-on-brand: #91b0fc;
+  --divider-primary: #444e65;
+
+  --border-btn: #aab0bf;
 }
 
 * {
@@ -54,6 +63,11 @@ main {
 
 .primary-btn {
   padding: 0.3em 0.6em;
+  background-color: var(--accent-100);
+  border: 0.5px solid var(--border-btn);
+  color: var(--text-brand);
+  border-radius: 4px;
+  font-weight: var(--fw-medium);
 }
 
 /* header styling */
@@ -68,11 +82,12 @@ main {
   align-items: center;
   width: 100%;
   padding-block: 0.5rem;
-  border-bottom: 1px solid var(--clr-primary-100);
+  border-bottom: 1px solid var(--divider-on-brand);
 }
 .site-title {
   display: none;
   font-size: 2.5rem;
+  color: var(--text-brand);
 }
 
 .site-logo {
@@ -111,11 +126,12 @@ main {
   align-items: center;
   gap: 1rem;
   padding-block: 1rem;
-  border-bottom: 1px solid var(--clr-primary-100);
+  border-bottom: 1px solid var(--divider-on-brand);
 }
 .selectItemsSection label {
   font-size: 1rem;
   font-weight: var(--fw-medium);
+  color: var(--text-brand);
   width: 100%;
   text-align: center;
 }
@@ -137,7 +153,10 @@ label[for="pokemonSelect2"] {
 
 .pokemonSelect {
   padding: 0.4rem 0.5rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  border: 1px solid var(--divider-primary);
+  border-radius: 4px;
 }
 
 .selectItemsSection .displayWrapper {
@@ -170,9 +189,10 @@ label[for="pokemonSelect2"] {
 }
 
 .pokemonCard {
-  border: 1px solid black;
+  box-shadow: 0px 5px 9px 1px hsla(222, 21%, 24%, 0.5);
   min-width: 270px;
   padding: 1rem;
+  color: var(--text-tertiary);
 }
 .pokemonCard > div {
   align-items: center;
@@ -181,6 +201,7 @@ label[for="pokemonSelect2"] {
 .pokemonCard h2 {
   font-size: 1.25rem;
   font-weight: var(--fw-semi-bold);
+  color: var(--text-secondary);
 }
 
 .card-header {
@@ -247,7 +268,7 @@ label[for="pokemonSelect2"] {
   .dropdownWrapper {
     padding-right: 1rem;
     min-height: 25rem;
-    border-right: 1px solid var(--clr-primary-100);
+    border-right: 1px solid var(--divider-on-brand);
   }
 
   .selectItemsSection .displayWrapper {
@@ -261,6 +282,7 @@ label[for="pokemonSelect2"] {
 }
 
 .compareSection {
+  color: var(--text-tertiary);
   max-width: 500px;
   margin: 2rem auto;
   display: grid;
@@ -292,6 +314,10 @@ label[for="pokemonSelect2"] {
   text-decoration: underline;
   text-underline-offset: 20%;
   color: var(--success);
+}
+
+.compareSection h2 {
+  color: var(--text-secondary);
 }
 
 .compareSection img {
@@ -432,12 +458,19 @@ label[for="pokemonSelect2"] {
   text-align: center;
   font-size: 1.5rem;
   font-weight: var(--fw-semi-bold);
+  color: var(--text-secondary);
   margin-block: 1rem;
+  padding-top: 1rem;
+}
+
+#battleStatus.active {
+  border-top: 1px solid var(--divider-on-brand);
 }
 .battleSection {
   align-items: center;
   gap: 1.5rem;
   padding: 1rem;
+  color: var(--text-secondary);
 }
 .playersAndStats {
   display: grid;
@@ -457,6 +490,7 @@ label[for="pokemonSelect2"] {
 .player0 {
   grid-area: pokemon1;
   font-size: 1.25rem;
+  margin-right: -0.75rem;
 }
 .player1 {
   grid-area: pokemon2;
@@ -467,6 +501,7 @@ label[for="pokemonSelect2"] {
   margin-inline: 1rem;
   font-size: 1rem;
   font-weight: var(--fw-regular);
+  color: var(--text-tertiary);
 }
 
 .player0HP {
@@ -479,6 +514,7 @@ label[for="pokemonSelect2"] {
 }
 .battleHP {
   grid-area: battleHP;
+  color: var(--text-tertiary);
 }
 
 .currentPlayer {
@@ -503,6 +539,7 @@ label[for="pokemonSelect2"] {
 .currentMove span {
   font-size: 2rem;
   font-weight: var(--fw-bold);
+  color: var(--text-primary);
 }
 
 .battleMessages {
@@ -524,6 +561,8 @@ label[for="pokemonSelect2"] {
 #attackBtn {
   font-size: 1.25rem;
   font-weight: var(--fw-medium);
+  color: var(--pure-white);
+  background-color: var(--warning-bg);
 }
 
 .hpWarning {
@@ -546,11 +585,12 @@ label[for="pokemonSelect2"] {
 .winner-title {
   font-size: 3rem;
   font-weight: var(--fw-semi-bold);
+  color: var(--text-primary);
 }
 
 .battleSection a {
   text-underline-offset: 20%;
-  color: var(--text-primary);
+  color: var(--text-tertiary);
 }
 
 .resetBattleDiv {
@@ -558,4 +598,5 @@ label[for="pokemonSelect2"] {
   gap: 0.5rem;
   font-size: 1.25rem;
   font-weight: var(--fw-medium);
+  color: var(--text-tertiary);
 }

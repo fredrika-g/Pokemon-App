@@ -7,6 +7,7 @@ let toBattleBtn = document.querySelector("#toBattleBtn");
 
 let compareSection = document.querySelector("#compareSection");
 let battleSection = document.querySelector("#battleSection");
+let battleStatus = document.querySelector("#battleStatus");
 
 let breakpoint = 768;
 
@@ -290,7 +291,8 @@ const showComparison = () => {
 
 // starting battle
 const startBattle = () => {
-  document.querySelector("#battleStatus").innerText = "Battle has started!";
+  battleStatus.innerText = "Battle has started!";
+  battleStatus.classList.add("active");
 
   battlingPokemon = [...chosenPokemonList];
 
@@ -429,7 +431,7 @@ const attack = (current, next) => {
 };
 
 const gameOver = (winner, loser) => {
-  document.querySelector("#battleStatus").innerText = "";
+  battleStatus.innerText = "";
 
   battleSection.innerHTML = "<h2 class='winner-title'>Winner</h2>";
   battleSection.innerHTML += `<div class="winner-profile flex flex-column">
